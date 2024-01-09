@@ -1,24 +1,31 @@
-import logo from './logo.svg';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
+import Create from './components/Create';
+import Read from './components/Read';
+import SingleUser from './components/SingleUser';
+import { useDispatch } from 'react-redux';
+import { showUser } from './features/UserDetailSlice';
+import { useEffect } from 'react';
+import Update from './components/Update';
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(showUser());
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route exact path='/' element={<Create />} />
+          <Route exact path='/read' element={<Read />} />
+          <Route exact path='/read/:id' element={<SingleUser />} />
+          <Route exact path='/update/:id' element={<Update/>} />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 
