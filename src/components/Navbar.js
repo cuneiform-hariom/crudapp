@@ -12,6 +12,8 @@ export default function Navbar() {
 
     const [showBox, setShowBox] = useState(false)
 
+    const [fData, setFData] = useState([])
+
     const handleSearch = (e) => {
         const value = e.target.value;
         setSearchData(value);
@@ -26,6 +28,14 @@ export default function Navbar() {
     useEffect(() => {
         dispatch(searchUser(searchData));
     }, [searchData]);
+
+
+    useEffect(() => {
+        const filterData = count.users.filter(((ele) => {
+            return ele.name.toLowerCase().includes(searchData.toLowerCase());
+        }))
+        setFData(filterData)
+    }, [searchData])
 
     return (
         <div>
@@ -54,25 +64,27 @@ export default function Navbar() {
                                 onChange={handleSearch}
                             />
                             {
-                                showBox && <div className={"dataBox"}>
-                                    <ul className='searchList'>
-                                        {count.users && count.users
-                                            .filter((ele) => {
-                                                return ele.name.toLowerCase().includes(searchData.toLowerCase());
-                                            })
-                                            .map((ele) => {
-                                                return <li key={ele.id}>
-                                                    <Link to={`/read/${ele.id}`}>{ele.name}</Link>
-                                                    </li>;
-                                            })}
-                                    </ul>
-                                </div>
-                            }
-
+                                showBox && (
+                                    <div className={"dataBox"}>
+                                        <ul className='searchList'>
+                                            {
+                                                fData.length > 0 ?
+                                                    fData.map((ele) => {
+                                                        return (
+                                                            <li key={ele.id} >
+                                                                <Link to={`/read/${ele.id}`}>{ele.name}</Link>
+                                                            </li>
+                                                        );
+                                                    })
+                                                    : "No record found"
+                                            }
+                                        </ul>
+                                    </div>
+                                )}
                         </form>
                     </div>
-                </div>
-            </nav>
-        </div>
+                </div >
+            </nav >
+        </div >
     )
 }

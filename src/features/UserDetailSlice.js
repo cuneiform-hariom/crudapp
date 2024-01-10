@@ -2,7 +2,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 // create action
 export const createUser = createAsyncThunk("createUser", async (data, { rejectWithValue }) => {
-    console.log("data: ", data);
     const response = await fetch("https://659cdbb2633f9aee790806e8.mockapi.io/crud", {
         method: "POST",
         headers: {
@@ -24,7 +23,6 @@ export const showUser = createAsyncThunk("showUser", async (_, { rejectWithValue
     const response = await fetch("https://659cdbb2633f9aee790806e8.mockapi.io/crud");
     try {
         const result = await response.json();
-        console.log('result: ', result);
         return result;
     } catch (error) {
         return rejectWithValue(error);
@@ -42,7 +40,6 @@ export const deleteUser = createAsyncThunk(
 
         try {
             const result = await response.json();
-            console.log(result);
             return result;
         } catch (error) {
             return rejectWithValue(error);
@@ -54,26 +51,26 @@ export const deleteUser = createAsyncThunk(
 export const updateUser = createAsyncThunk(
     "updateUser",
     async (data, { rejectWithValue }) => {
-        console.log("updated data", data);
-        const response = await fetch(
-            `https://641dd63d945125fff3d75742.mockapi.io/crud/${data.id}`,
-            {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
-            }
-        );
-
-        try {
-            const result = await response.json();
-            return result;
-        } catch (error) {
-            return rejectWithValue(error);
+      console.log("updated data", data);
+      const response = await fetch(
+        `https://659cdbb2633f9aee790806e8.mockapi.io/crud/${data.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
         }
+      );
+  
+      try {
+        const result = await response.json();
+        return result;
+      } catch (error) {
+        return rejectWithValue(error);
+      }
     }
-);
+  );
 
 const extraReducers = (builder) => {
     builder
@@ -124,9 +121,8 @@ const extraReducers = (builder) => {
         })
         .addCase(updateUser.rejected, (state, action) => {
             state.loading = false;
-            state.error = action.payload;
+            state.error = action.payload.message;
         })
-
 }
 
 export const userDetail = createSlice({
@@ -139,7 +135,6 @@ export const userDetail = createSlice({
     },
     reducers: {
         searchUser: (state, action) => {
-            console.log(action.payload);
             state.searchData = action.payload;
         },
     },
